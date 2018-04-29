@@ -19,6 +19,14 @@ socket.on("NewChat",function(Newchat){
   console.log('Newchat',Newchat);
 });
 
+socket.on('newUserWelcome',function(user){
+  console.log(`welcome ${user.name}`);
+});
+
+socket.on('newUserJoin',function(user){
+  console.log(`${user.name} joined`);
+});
+
 socket.on('disconnect',function(){
   console.log("Disconnected from Server");
 });

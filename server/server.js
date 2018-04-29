@@ -27,11 +27,14 @@ io.on('connection',(socket)=>{
   // socket.on('CreateNewemail',function(newEmail){
   //   console.log('Created email',newEmail);
   // });
+  socket.emit('newUserWelcome',{name:'sumanta'});
+  socket.broadcast.emit('newUserJoin',{name:'sumanta'});
 
   socket.on('createNewchat',function(NewChat){
     console.log('New chat',NewChat);
     NewChat.createdAt=new Date().getTime();
     io.emit('NewChat',NewChat);
+    // socket.broadcast.emit('NewChat',NewChat);
   });
 
   socket.on('disconnect',()=>{
