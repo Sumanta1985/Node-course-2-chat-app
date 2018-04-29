@@ -20,11 +20,11 @@ socket.on("NewChat",function(Newchat){
 });
 
 socket.on('newUserWelcome',function(user){
-  console.log(`welcome ${user.name}`);
+  console.log(`${user.from} welcomes you`);
 });
 
 socket.on('newUserJoin',function(user){
-  console.log(`${user.name} joined`);
+  console.log(`New user joined`);
 });
 
 socket.on('disconnect',function(){

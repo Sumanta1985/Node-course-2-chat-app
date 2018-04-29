@@ -2,7 +2,7 @@ const path=require('path');
 const http=require('http');
 const socketIO=require('socket.io');
 const express=require('express');
-
+const {generateMessage}=require('./utils/message');
 const port=process.env.PORT||3000;
 
 const app=express();
@@ -18,17 +18,13 @@ app.use(express.static(publicPath));
 io.on('connection',(socket)=>{
   console.log("new user connected");
 
-  // socket.emit('Newemail',{
-  //   from:'sumanta@exaple.com',
-  //   text:'Hi',
-  //   createdAt:123
-  // });
+  // socket.emit('Newemail',enerateMessage('sumanta@example.com','hi '));
   //
   // socket.on('CreateNewemail',function(newEmail){
   //   console.log('Created email',newEmail);
   // });
-  socket.emit('newUserWelcome',{name:'sumanta'});
-  socket.broadcast.emit('newUserJoin',{name:'sumanta'});
+  socket.emit('newUserWelcome',generateMessage('Admin','Welcome to chat group'));
+  socket.broadcast.emit('newUserJoin',generateMessage('Admin','New user joined'));
 
   socket.on('createNewchat',function(NewChat){
     console.log('New chat',NewChat);
