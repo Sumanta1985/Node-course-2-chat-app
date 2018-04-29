@@ -17,15 +17,32 @@ app.use(express.static(publicPath));
 
 io.on('connection',(socket)=>{
   console.log("new user connected");
+
+  // socket.emit('Newemail',{
+  //   from:'sumanta@exaple.com',
+  //   text:'Hi',
+  //   createdAt:123
+  // });
+  //
+  // socket.on('CreateNewemail',function(newEmail){
+  //   console.log('Created email',newEmail);
+  // });
+
+  socket.on('createNewchat',function(NewChat){
+    console.log('New chat',NewChat);
+    NewChat.createdAt=12345
+    socket.emit('NewChat',NewChat);
+  });
+
   socket.on('disconnect',()=>{
     console.log('Client connection closed');
   });
+
 });
 
 app.get('/',(req,res)=>{
   console.log('document',req);
 });
-
 
 server.listen(port,()=>{
   console.log(`Server started at port ${port}`);
