@@ -30,8 +30,8 @@ io.on('connection',(socket)=>{
 
   socket.on('createNewchat',function(NewChat){
     console.log('New chat',NewChat);
-    NewChat.createdAt=12345
-    socket.emit('NewChat',NewChat);
+    NewChat.createdAt=new Date().getTime();
+    io.emit('NewChat',NewChat);
   });
 
   socket.on('disconnect',()=>{
