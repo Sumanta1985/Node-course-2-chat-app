@@ -15,8 +15,30 @@ socket.on('connect',function(){
   // });
 });
 
+// socket.emit('createNewchat',{
+//   from: 'sumanta',
+//   text: 'hi,how are you'
+// },(obj)=>{
+//   console.log(obj.text);
+// });
+
+jQuery('#message-form').on('submit',(e)=>{
+  e.preventDefault();
+
+  socket.emit('createNewchat',{
+    from: 'sumanta',
+    text: jQuery('[name=message]').val()
+  },(obj)=>{
+    console.log(obj.text);
+  });
+});
+
 socket.on("NewChat",function(Newchat){
-  console.log('Newchat',Newchat);
+  // console.log('Newchat',Newchat);
+  var li=jQuery('<li></li>');
+  li.text(`${Newchat.from}:${Newchat.text}`);
+
+  jQuery('#messages').append(li);
 });
 
 socket.on('newUserWelcome',function(user){
@@ -30,6 +52,8 @@ socket.on('newUserJoin',function(user){
 socket.on('disconnect',function(){
   console.log("Disconnected from Server");
 });
+
+
 
 // socket.on('Newemail',function(email){
 //   console.log("new email",email);

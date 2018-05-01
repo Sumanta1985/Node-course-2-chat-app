@@ -26,10 +26,11 @@ io.on('connection',(socket)=>{
   socket.emit('newUserWelcome',generateMessage('Admin','Welcome to chat group'));
   socket.broadcast.emit('newUserJoin',generateMessage('Admin','New user joined'));
 
-  socket.on('createNewchat',function(NewChat){
-    console.log('New chat',NewChat);
+  socket.on('createNewchat',function(NewChat,callback){
+//    console.log('New chat',NewChat);
     NewChat.createdAt=new Date().getTime();
     io.emit('NewChat',NewChat);
+    callback({text:'this is from server'});
     // socket.broadcast.emit('NewChat',NewChat);
   });
 
