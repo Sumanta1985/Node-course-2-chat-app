@@ -2,7 +2,9 @@ const path=require('path');
 const http=require('http');
 const socketIO=require('socket.io');
 const express=require('express');
-const {generateMessage}=require('./utils/message');
+const {generateMessage,generateLocationMessage}=require('./utils/message');
+
+
 const port=process.env.PORT||3000;
 
 const app=express();
@@ -32,6 +34,10 @@ io.on('connection',(socket)=>{
     io.emit('NewChat',NewChat);
     callback({text:'this is from server'});
     // socket.broadcast.emit('NewChat',NewChat);
+  });
+
+  socket.on('userlocation',(location)=>{
+    io.emit('NewLocation',generateLocationMessage('Admin',location.latitude,location.longitude));
   });
 
   socket.on('disconnect',()=>{
