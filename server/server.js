@@ -25,8 +25,8 @@ io.on('connection',(socket)=>{
   // socket.on('CreateNewemail',function(newEmail){
   //   console.log('Created email',newEmail);
   // });
-  socket.emit('newUserWelcome',generateMessage('Admin','Welcome to chat group'));
-  socket.broadcast.emit('newUserJoin',generateMessage('Admin','New user joined'));
+  socket.emit('NewChat',generateMessage('Admin','Welcome to chat group'));
+  socket.broadcast.emit('NewChat',generateMessage('Admin','New user joined'));
 
   socket.on('createNewchat',function(NewChat,callback){
 //    console.log('New chat',NewChat);
@@ -36,8 +36,9 @@ io.on('connection',(socket)=>{
     // socket.broadcast.emit('NewChat',NewChat);
   });
 
-  socket.on('userlocation',(location)=>{
-    io.emit('NewLocation',generateLocationMessage('Admin',location.latitude,location.longitude));
+  socket.on('Newuserlocation',(location,callback)=>{
+    io.emit('UserLocation',generateLocationMessage('User',location.latitude,location.longitude));
+    callback();
   });
 
   socket.on('disconnect',()=>{
