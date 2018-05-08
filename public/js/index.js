@@ -10,7 +10,7 @@ socket.on('disconnect',function(){
 
 socket.on("NewChat",function(Newchat){
   var li=jQuery('<li></li>');
-  li.text(`${Newchat.from}:${Newchat.text}`);
+  li.text(`${Newchat.from} ${moment(Newchat.createdAt).format("h:mm a")}:${Newchat.text}`);
 
   jQuery('#messages').append(li);
 });
@@ -18,7 +18,7 @@ socket.on("NewChat",function(Newchat){
 socket.on('UserLocation',function(location){
   var li=jQuery('<li></li>');
   var a=jQuery('<a target="_blank">My location</a>');
-  li.text(`${location.from}:`);
+  li.text(`${location.from} ${moment(location.createdAt).format("h:mm a")}:`);
   a.attr('href',location.url);
   li.append(a);
   jQuery('#messages').append(li);
@@ -31,7 +31,6 @@ jQuery('#message-form').on('submit',(e)=>{
     from: 'User',
     text: messageTextBox.val()
   },(obj)=>{
-//    console.log(obj.text);
     messageTextBox.val('');
   });
 });
@@ -57,18 +56,3 @@ locationbutton.on('click',()=>{
     locationbutton.removeAttr('disabled').text('send location');
   });
 });
-
-// socket.on('newUserWelcome',function(user){
-//   var li=jQuery('<li></li>');
-//   li.text(`${user.from}:${user.text}`);
-//
-//   jQuery('#messages').append(li);
-// });
-//
-// socket.on('newUserJoin',function(user){
-//   var li=jQuery('<li></li>');
-//   li.text(`${user.from}:${user.text}`);
-//
-//   jQuery('#messages').append(li);
-// });
-//
