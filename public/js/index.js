@@ -1,3 +1,5 @@
+//const moment=require('moment'); doesn't work in client side javascript
+
 var socket=io();  //request server to create a connection,returns socket
 
 socket.on('connect',function(){
@@ -9,19 +11,36 @@ socket.on('disconnect',function(){
 });
 
 socket.on("NewChat",function(Newchat){
-  var li=jQuery('<li></li>');
-  li.text(`${Newchat.from} ${moment(Newchat.createdAt).format("h:mm a")}:${Newchat.text}`);
-
-  jQuery('#messages').append(li);
+  var formattedtime=moment(Newchat.createdAt).format("h:mm a");
+  var template=jQuery('#message-template').html();
+  var html=Mustache.render(template,{
+    text:Newchat.text,
+    from:Newchat.from,
+    createdAt:formattedtime
+  });
+  jQuery('#messages').append(html);
+  
+  // var li=jQuery('<li></li>');
+  // li.text(`${Newchat.from} ${moment(Newchat.createdAt).format("h:mm a")}:${Newchat.text}`);
+  // jQuery('#messages').append(li);
 });
 
 socket.on('UserLocation',function(location){
-  var li=jQuery('<li></li>');
-  var a=jQuery('<a target="_blank">My location</a>');
-  li.text(`${location.from} ${moment(location.createdAt).format("h:mm a")}:`);
-  a.attr('href',location.url);
-  li.append(a);
-  jQuery('#messages').append(li);
+  var formattedtime=moment(location.createdAt).format("h:mm a");
+  var template=jQuery('#location-template').html();
+  var html=Mustache.render(template,{
+    url:location.url,
+    from:location.from,
+    createdAt:formattedtime
+  });
+  jQuery('#messages').append(html);
+
+  // var li=jQuery('<li></li>');
+  // var a=jQuery('<a target="_blank">My location</a>');
+  // li.text(`${location.from} ${moment(location.createdAt).format("h:mm a")}:`);
+  // a.attr('href',location.url);
+  // li.append(a);
+  // jQuery('#messages').append(li);
 });
 
 jQuery('#message-form').on('submit',(e)=>{
