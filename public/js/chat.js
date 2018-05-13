@@ -27,6 +27,16 @@ function scrollToBottom(){
 
 socket.on('connect',function(){
   console.log("connected to server");
+  var param=jQuery.deparam(window.location.search);
+  socket.emit('join',param,(err)=>{
+    if (err){
+      console.log ("err object",err);
+      alert("Please provide valid name and channel name to join");
+      window.location.href="/";
+    }else{
+      console.log("No error");
+    };
+  });
 });
 
 socket.on('disconnect',function(){

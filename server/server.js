@@ -3,6 +3,7 @@ const http=require('http');
 const socketIO=require('socket.io');
 const express=require('express');
 const {generateMessage,generateLocationMessage}=require('./utils/message');
+const {isStringValid}=require('./utils/validate');
 
 const port=process.env.PORT||3000;
 
@@ -16,6 +17,17 @@ app.use(express.static(publicPath));
 
 io.on('connection',(socket)=>{
   console.log("new user connected");
+
+  socket.on('join',(param,callback)=>{
+    var name=param.name;
+    var c_name=param.c_name;
+
+    if (isStringValid(name) && isStringValid(c_name)){
+      callback();
+    }else{
+      callback("Please provide valid name and channel");
+    }
+  });
 
   socket.emit('NewChat',generateMessage('Admin','Welcome to chat group'));
   socket.broadcast.emit('NewChat',generateMessage('Admin','New user joined'));
