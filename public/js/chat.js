@@ -11,16 +11,17 @@ function scrollToBottom(){
   var scrollTop=messages.prop("scrollTop");
   var scrollHeight=messages.prop("scrollHeight");
   var newMessageHeight=newMessage.innerHeight();
+  //Not required,instead of this any number can work what udemy trying to do
   var lastMessageHeight=newMessage.prev().innerHeight();
 
-  console.log('clientHeight',clientHeight);
-  console.log('scrollTop',scrollTop);
-  console.log('newMessageHeight',newMessageHeight);
-  console.log('lastMessageHeight',lastMessageHeight);
-  console.log('scrollHeight',scrollHeight);
+  // console.log('clientHeight',clientHeight);
+  // console.log('scrollTop',scrollTop);
+  // console.log('newMessageHeight',newMessageHeight);
+  // console.log('lastMessageHeight',lastMessageHeight);
+  // console.log('scrollHeight',scrollHeight);
 
   if (clientHeight+scrollTop+newMessageHeight>=scrollHeight){
-    console.log('Should scroll');
+    // console.log('Should scroll');
     messages.scrollTop(scrollHeight);
   }
 }
@@ -30,17 +31,29 @@ socket.on('connect',function(){
   var param=jQuery.deparam(window.location.search);
   socket.emit('join',param,(err)=>{
     if (err){
-      console.log ("err object",err);
+      // console.log ("err object",err);
       alert("Please provide valid name and channel name to join");
       window.location.href="/";
     }else{
       console.log("No error");
-    };
-  });
+    }}
+  );
 });
 
 socket.on('disconnect',function(){
   console.log("Disconnected from Server");
+  // var param=jQuery.deparam(window.location.search);
+  // socket.emit('exit',param);
+});
+
+socket.on('userlist',(users)=>{
+  console.log("users",users);
+  var ol=jQuery('<ol></ol>');
+  users.forEach((user)=>{
+    ol.append(jQuery('<li></li>').text(user));
+  });
+  //to replace complete list use html();
+  jQuery('#users').html(ol);
 });
 
 socket.on("NewChat",function(Newchat){
@@ -79,15 +92,21 @@ socket.on('UserLocation',function(location){
 jQuery('#message-form').on('submit',(e)=>{
   e.preventDefault();
   var messageTextBox=jQuery('[name=message]');
-  socket.emit('createNewchat',{
-    from: 'User',
-    text: messageTextBox.val()
-  },(obj)=>{
-    messageTextBox.val('');
-  });
+  var param=jQuery.deparam(window.location.search);
+  console.log('messageTextBox.val().length:',messageTextBox.val().length);
+  if (messageTextBox.val().length>0){
+    socket.emit('createNewchat',{
+  //    from: param.name,
+      from: param,
+      text: messageTextBox.val()
+    },(obj)=>{
+      messageTextBox.val('');
+    });
+  }
 });
 
 var locationbutton=jQuery('#send-location');
+
 locationbutton.on('click',()=>{
 //  e.preventDefault();
   if(!navigator.geolocation){
@@ -97,7 +116,9 @@ locationbutton.on('click',()=>{
   locationbutton.attr('disabled','disabled').text('sending location...');
 
   navigator.geolocation.getCurrentPosition((position)=>{
+    var param=jQuery.deparam(window.location.search);
     socket.emit('Newuserlocation',{
+      from: param.name,
       latitude: position.coords.latitude,
       longitude: position.coords.longitude
     },()=>{
